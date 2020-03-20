@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-
-import { View } from 'react-native';
-import { object } from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { Container, TextTitle, TextSubTitle, Form } from './styles';
 
@@ -9,9 +7,17 @@ export default class InfoWorld extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.getParam('country').displayName,
   });
+
+  static propTypes = {
+    navigation: PropTypes.shape({
+      getParam: PropTypes.func,
+    }).isRequired,
+  };
+
   state = {
     country: [],
   };
+
   componentDidMount() {
     const { navigation } = this.props;
     const country = navigation.getParam('country');

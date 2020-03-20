@@ -9,3 +9,35 @@ export const MapViewStyled = styled(MapView)`
   width: 100%;
   height: 100%;
 `;
+export const LegendForm = styled.View`
+  width: 120px;
+  height: auto;
+  background: #fff;
+  position: absolute;
+  align-self: flex-end;
+  border: 1px;
+  border-radius: 4px;
+  padding: 10px;
+`;
+export const Info = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+export const LegendTitle = styled.Text`
+  font-size: 14px;
+  font-weight: bold;
+  align-self: center;
+  margin-bottom: 10px;
+`;
+export const LegendText = styled.Text`
+  font-size: 12px;
+  width: 40px;
+`;
+export const LegendColor = styled.View`
+  width: 12px;
+  height: 12px;
+  border: 1px;
+  border-radius: 6px;
+`;

@@ -1,24 +1,36 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Circle } from 'react-native-maps';
-import { apiBrazil, apiWorld } from '../../services/api';
+import { apiBrazil, apiCountries } from '../../services/api';
 import LatLonUfs from '../../util/json/coordenadasUF';
 import { getDistance } from 'geolib';
-import { darken, lighten, opacify, transparentize } from 'polished';
-
-import { Container, MapViewStyled } from './styles';
+import { transparentize } from 'polished';
+import {
+  Container,
+  MapViewStyled,
+  LegendForm,
+  LegendText,
+  LegendTitle,
+  LegendColor,
+  Info,
+} from './styles';
 
 export default class Main extends Component {
   static navigationOptions = {
-    title: 'COVID-19 BRASIL',
+    title: 'COVID-19 MAP',
+  };
+
+  static propTypes = {
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }).isRequired,
   };
 
   state = {
     date: '',
     time: '',
     brazilUF: [],
-    mediaBrazil: 0,
-    world: [],
-    mediaWorld: 0,
+    countries: [],
   };
 
   async componentDidMount() {
@@ -39,27 +51,15 @@ export default class Main extends Component {
     }));
     this.setState({ brazilUF });
 
-    var mediaBrazil = 0;
-    brazilUF.map(UF => {
-      mediaBrazil += UF.suspects;
-    });
-    mediaBrazil /= brazilUF.length;
-    this.setState({ mediaBrazil });
-
-    const responseWorld = await apiWorld.get();
-    const { areas } = responseWorld.data;
-    this.setState({ world: areas });
-
-    var mediaWorld = 0;
-    areas.map(country => {
-      mediaWorld += country.totalDeaths;
-    });
+    const responsecountries = await apiCountries.get();
+    const { areas } = responsecountries.data;
+    this.setState({ countries: areas });
   }
 
   handleNavigate = event => {
     const { navigation } = this.props;
 
-    const { brazilUF, world } = this.state;
+    const { brazilUF, countries } = this.state;
 
     const coordinate = event.nativeEvent.coordinate;
     brazilUF.map(UF => {
@@ -72,23 +72,19 @@ export default class Main extends Component {
       }
     });
 
-    world.map(country => {
+    countries.map(country => {
       const distance = getDistance(
         { latitude: coordinate.latitude, longitude: coordinate.longitude },
         { latitude: country.lat, longitude: country.long },
       );
       if (distance <= country.totalDeaths * 70 + 100000) {
-        navigation.navigate('InfoWorld', { country });
+        navigation.navigate('Infocountries', { country });
       }
     });
   };
 
   render() {
-    const { brazilUF, mediaBrazil, world, mediaWorld } = this.state;
-    const LatLng = {
-      latitude: -22.2271,
-      longitude: -45.9394,
-    };
+    const { brazilUF, countries } = this.state;
     return (
       <Container>
         <MapViewStyled onPress={event => this.handleNavigate(event)}>
@@ -100,7 +96,7 @@ export default class Main extends Component {
               fillColor={transparentize(0.4, '#FF0000')}
             />
           ))}
-          {world.map(country => (
+          {countries.map(country => (
             <Circle
               key={country.id}
               center={{ latitude: country.lat, longitude: country.long }}
@@ -109,6 +105,17 @@ export default class Main extends Component {
             />
           ))}
         </MapViewStyled>
+        <LegendForm>
+          <LegendTitle>Legenda</LegendTitle>
+          <Info>
+            <LegendColor style={{ backgroundColor: '#0000FF' }} />
+            <LegendText>País</LegendText>
+          </Info>
+          <Info>
+            <LegendColor style={{ backgroundColor: '#FF0000' }} />
+            <LegendText>Estado</LegendText>
+          </Info>
+        </LegendForm>
       </Container>
     );
   }
