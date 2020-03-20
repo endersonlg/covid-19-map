@@ -3,14 +3,14 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import Main from '~/pages/Main';
 import InfoBrazil from './pages/InfoBrazil';
-import InfoWorld from './pages/infoWorld';
+import InfoCountries from './pages/InfoCountries';
 
 const Routes = createAppContainer(
   createStackNavigator(
     {
       Main,
       InfoBrazil,
-      InfoWorld,
+      InfoCountries,
     },
     {
       defaultNavigationOptions: {

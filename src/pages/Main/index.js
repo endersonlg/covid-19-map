@@ -78,7 +78,7 @@ export default class Main extends Component {
         { latitude: country.lat, longitude: country.long },
       );
       if (distance <= country.totalDeaths * 70 + 100000) {
-        navigation.navigate('Infocountries', { country });
+        navigation.navigate('InfoCountries', { country });
       }
     });
   };
