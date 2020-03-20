@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Container, TextTitle, TextSubTitle, Form } from './styles';
 
-export default class InfoWorld extends Component {
+export default class InfoCountries extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.getParam('country').displayName,
   });
@@ -30,7 +30,7 @@ export default class InfoWorld extends Component {
       <Container>
         <TextTitle>Informações</TextTitle>
         <TextSubTitle>Casos: {country.totalConfirmed}</TextSubTitle>
-        <TextSubTitle>Suspeitos: {country.totalRecovered} </TextSubTitle>
+        <TextSubTitle>Recuperados: {country.totalRecovered} </TextSubTitle>
         <TextSubTitle>Mortes: {country.totalDeaths}</TextSubTitle>
       </Container>
     );
