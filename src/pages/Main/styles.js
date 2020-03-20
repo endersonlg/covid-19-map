@@ -10,7 +10,7 @@ export const MapViewStyled = styled(MapView)`
   height: 100%;
 `;
 export const LegendForm = styled.View`
-  width: 120px;
+  width: 180px;
   height: auto;
   background: #fff;
   position: absolute;
@@ -33,7 +33,7 @@ export const LegendTitle = styled.Text`
 `;
 export const LegendText = styled.Text`
   font-size: 12px;
-  width: 40px;
+  width: auto;
 `;
 export const LegendColor = styled.View`
   width: 12px;

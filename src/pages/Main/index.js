@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { format } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 import { Circle } from 'react-native-maps';
 import { apiBrazil, apiCountries } from '../../services/api';
 import LatLonUfs from '../../util/json/coordenadasUF';
@@ -27,10 +29,12 @@ export default class Main extends Component {
   };
 
   state = {
-    date: '',
-    time: '',
     brazilUF: [],
     countries: [],
+    totalConfirmed: 0,
+    totalDeaths: 0,
+    totalRecovered: 0,
+    lastUpdated: 0,
   };
 
   async componentDidMount() {
@@ -52,8 +56,27 @@ export default class Main extends Component {
     this.setState({ brazilUF });
 
     const responsecountries = await apiCountries.get();
-    const { areas } = responsecountries.data;
-    this.setState({ countries: areas });
+    const {
+      areas,
+      totalConfirmed,
+      totalDeaths,
+      totalRecovered,
+      lastUpdated,
+    } = responsecountries.data;
+
+    var date = new Date(lastUpdated);
+
+    const formattedDate = format(date, "dd  MMMM yyyy', às' H:mm'h'", {
+      locale: pt,
+    });
+
+    this.setState({
+      countries: areas,
+      totalConfirmed,
+      totalDeaths,
+      totalRecovered,
+      lastUpdated: formattedDate,
+    });
   }
 
   handleNavigate = event => {
@@ -84,7 +107,15 @@ export default class Main extends Component {
   };
 
   render() {
-    const { brazilUF, countries } = this.state;
+    const {
+      brazilUF,
+      countries,
+      totalConfirmed,
+      totalRecovered,
+      totalDeaths,
+      lastUpdated,
+    } = this.state;
+
     return (
       <Container>
         <MapViewStyled onPress={event => this.handleNavigate(event)}>
@@ -109,11 +140,26 @@ export default class Main extends Component {
           <LegendTitle>Legenda</LegendTitle>
           <Info>
             <LegendColor style={{ backgroundColor: '#0000FF' }} />
-            <LegendText>País</LegendText>
+            <LegendText>Mortes no País</LegendText>
           </Info>
           <Info>
             <LegendColor style={{ backgroundColor: '#FF0000' }} />
-            <LegendText>Estado</LegendText>
+            <LegendText>Suspeitos no Estado</LegendText>
+          </Info>
+          <Info>
+            <LegendText>Total Confirmado:</LegendText>
+            <LegendText>{totalConfirmed}</LegendText>
+          </Info>
+          <Info>
+            <LegendText>Total Recuperados:</LegendText>
+            <LegendText>{totalRecovered}</LegendText>
+          </Info>
+          <Info>
+            <LegendText>Total Mortos:</LegendText>
+            <LegendText>{totalDeaths}</LegendText>
+          </Info>
+          <Info>
+            <LegendText>{lastUpdated}</LegendText>
           </Info>
         </LegendForm>
       </Container>
