@@ -90,7 +90,7 @@ export default class Main extends Component {
         { latitude: coordinate.latitude, longitude: coordinate.longitude },
         { latitude: UF.LatLng.latitude, longitude: UF.LatLng.longitude },
       );
-      if (distance <= UF.suspects * 20 + 100000) {
+      if (distance <= UF.cases * 10 + 100000) {
         navigation.navigate('InfoBrazil', { UF });
       }
     });
@@ -100,7 +100,7 @@ export default class Main extends Component {
         { latitude: coordinate.latitude, longitude: coordinate.longitude },
         { latitude: country.lat, longitude: country.long },
       );
-      if (distance <= country.totalDeaths * 70 + 100000) {
+      if (distance <= country.totalConfirmed * 10 + 100000) {
         navigation.navigate('InfoCountries', { country });
       }
     });
@@ -123,7 +123,7 @@ export default class Main extends Component {
             <Circle
               key={UF.uid}
               center={UF.LatLng}
-              radius={UF.suspects * 20 + 100000}
+              radius={UF.cases !== 0 ? UF.cases * 10 + 100000 : 0}
               fillColor={transparentize(0.4, '#FF0000')}
             />
           ))}
@@ -131,7 +131,11 @@ export default class Main extends Component {
             <Circle
               key={country.id}
               center={{ latitude: country.lat, longitude: country.long }}
-              radius={country.totalDeaths * 70 + 100000}
+              radius={
+                country.totalConfirmed !== 0
+                  ? country.totalConfirmed * 10 + 100000
+                  : 0
+              }
               fillColor={transparentize(0.4, '#0000FF')}
             />
           ))}
@@ -140,11 +144,11 @@ export default class Main extends Component {
           <LegendTitle>Legenda</LegendTitle>
           <Info>
             <LegendColor style={{ backgroundColor: '#0000FF' }} />
-            <LegendText>Mortes no País</LegendText>
+            <LegendText>Confirmados no País</LegendText>
           </Info>
           <Info>
             <LegendColor style={{ backgroundColor: '#FF0000' }} />
-            <LegendText>Suspeitos no Estado</LegendText>
+            <LegendText>Confirmados no Estado</LegendText>
           </Info>
           <Info>
             <LegendText>Total Confirmado:</LegendText>
